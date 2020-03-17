@@ -1,0 +1,4 @@
+- hosts: clients-linux
+  become: yes
+  roles:
+    - common

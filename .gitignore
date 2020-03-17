@@ -1,7 +1,7 @@
-#ignore pastas: ".gitignore" no mesmo nível de "vagrant-VMs"
+#ignore: match directories anywhere in the repository.
 **/.vagrant  
 
-#ignore arquivos:
+#ignore files:
 *.class
 *.jar
 *.war

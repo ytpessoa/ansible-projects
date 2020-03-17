@@ -1,0 +1,96 @@
+- hosts: localhost
+  tags: s21
+  gather_facts: no
+
+  tasks:
+  
+     #task 1:
+    - shell: ls >> teste2.txt    
+      register: result 
+      #ignore_errors: yes 
+    
+    # task 2:
+    - debug:
+        var: result
+        verbosity: 4
+
+    # task 3: exibe apenas item=2    
+    - shell: echo "{{ item }}" > echo.txt
+      loop:
+        - one
+        - two
+      register: echo
+      changed_when: echo.stdout != "one"
+    
+    # task :4
+    - name: Loop add users 1
+      user:
+        name: "{{ item }}"
+        state: present #create user
+        groups: "users"
+      loop:
+        - joao
+        - maria
+    
+    #task 5
+    - name: Loop add users 2
+      user: 
+        name: "{{item.name}}"
+        group: "{{item.group}}"
+        state: present
+      loop:
+        - { name: 'user1', group: 'users'}
+        - { name: 'user2', group: 'root'}
+    
+    # task 6: 
+    - name: Loop Package install
+      yum: 
+        name: "{{ packages_install }}" # var em outro arquivo
+        state: present
+    
+    - name : Loop Package remove
+      yum: 
+        name: "{{ item }}"
+        state: absent      
+      loop: "{{ packages_remove }}" #var em outro arquivo
+
+
+
+      
+
+
+
+
+
+
+
+
+
+
+  
+   
+      
+    
+
+
+
+
+
+# - hosts: localhost
+#   tags: s21
+#   gather_facts: no
+#   vars:
+#     kubergrunt_namespaces:
+#       - [cert-manager-tiller, cert-manager]
+#       - [external-dns-tiller, external-dns]
+#       - [monitoring-tiller, monitoring]
+#       - [rook-tiller, rook]
+#       - [crunchy-data-postgres-tiller, crunchy-data-postgres]
+#       - [redis-tiller, redis]
+#       - [gitlab-tiller, gitlab]
+#   tasks:
+#     - name: gerando ranom numbers
+#       debug:
+#         msg: "{{ item.0 }}"
+#       with_items:
+#         - "{{ kubergrunt_namespaces }}"

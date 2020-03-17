@@ -1,0 +1,34 @@
+# task 01
+- name: add several users
+  user:
+  args:
+    name: "{{ item }}"
+    state: present
+    groups: "adm"
+
+  loop: "{{all_users}}"
+  tags: [never, install] 
+
+
+# task 02
+- name: remove several users
+  user:
+  args:
+    name: "{{ item }}"
+    state: absent
+    remove: yes    
+    groups: "adm"  
+  register: result # to task dependencies
+  ignore_errors: True    
+  loop: "{{all_users}}"   
+  tags: [never, uninstall]
+
+# task 03
+- name: remove several users - deleting homes 
+  shell: rm -rf "{{ item }}"
+  args:
+    chdir: /home/
+    warn: no  
+  when: result is succeeded  # task 02 dependencies
+  loop: "{{all_users}}"
+  tags: [never, uninstall]
